@@ -54,7 +54,7 @@ pipeline {
              steps{
                  script{
                    withDockerRegistry(credentialsId: 'dockerhub', toolName: 'docker'){   
-                      sh "docker build -t youtube-clone ."
+                      sh "docker build -t app ."
                       sh "docker tag app mehdichitta/app:latest "
                       sh "docker push mehdichitta/app:latest "
                     }
