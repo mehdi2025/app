@@ -1,12 +1,12 @@
 pipeline {
     agent any
     tools {
-        jdk 'jdk 17'
-        nodejs 'node 16'
+        jdk 'jdk17'
+        nodejs 'node16'
     }
     environment {
         SCANNER_HOME = tool 'sonar-scanner'
-        APP_NAME = "reddit-clone-pipeline"
+        APP_NAME = "app"
         RELEASE = "1.0.0"
         DOCKER_USER = "mehdichitta"
         DOCKER_PASS = 'dockerhub'
@@ -22,14 +22,14 @@ pipeline {
         }
         stage('Checkout from Git') {
             steps {
-                git branch: 'main', url: 'https://github.com/mehdi2025/a-reddit-clone.git'
+                git branch: 'main', url: 'https://github.com/mehdi2025/app.git'
             }
         }
         stage("Sonarqube Analysis") {
             steps {
                 withSonarQubeEnv('SonarQube-Server') {
-                    sh '''$SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=Reddit-Clone-CI \
-                    -Dsonar.projectKey=Reddit-clone-CI'''
+                    sh '''$SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=app \
+                    -Dsonar.projectKey=app'''
                 }
             }
         }
@@ -40,37 +40,33 @@ pipeline {
                 }
             }
         }
-        stage('Install Dependencies') {
+        /*stage('Install Dependencies') {
             steps {
                 sh "npm install"
             }
-        }
+        }*/
         stage('TRIVY FS SCAN') {
             steps {
                 sh "trivy fs . > trivyfs.txt"
              }
          }
-	 /*stage("Build & Push Docker Image") {
-             steps {
-                 script {
-                     docker.withRegistry('',DOCKER_PASS) {
-                         docker_image = docker.build "${IMAGE_NAME}"
-                     }
-                     docker.withRegistry('',DOCKER_PASS) {
-                         docker_image.push("${IMAGE_TAG}")
-                         docker_image.push('latest')
-                     }
-                 }
-             }
-         }
-	 stage("Trivy Image Scan") {
-             steps {
-                 script {
-	              sh ('docker run -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy image ashfaque9x/reddit-clone-pipeline:latest --no-progress --scanners vuln  --exit-code 0 --severity HIGH,CRITICAL --format table > trivyimage.txt')
-                 }
-             }
-         }
-	 stage ('Cleanup Artifacts') {
+	 sstage("Docker Build & Push"){
+             steps{
+                 script{
+                   withDockerRegistry(credentialsId: 'dockerhub', toolName: 'docker'){   
+                      sh "docker build -t youtube-clone ."
+                      sh "docker tag app mehdichitta/app:latest "
+                      sh "docker push mehdichitta/app:latest "
+                    }
+                }
+            }
+        }
+        stage("TRIVY Image Scan"){
+            steps{
+                sh "trivy image mehdichitta/app:latest > trivyimage.txt" 
+            }
+        }
+	 /*stage ('Cleanup Artifacts') {
              steps {
                  script {
                       sh "docker rmi ${IMAGE_NAME}:${IMAGE_TAG}"
