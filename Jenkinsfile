@@ -66,7 +66,8 @@ pipeline {
                 sh "trivy image mehdichitta/app:latest > trivyimage.txt" 
             }
         }
-	 /*stage ('Cleanup Artifacts') {
+    }
+}        /*stage ('Cleanup Artifacts') {
              steps {
                  script {
                       sh "docker rmi ${IMAGE_NAME}:${IMAGE_TAG}"
@@ -93,6 +94,5 @@ pipeline {
             attachmentsPattern: 'trivyfs.txt,trivyimage.txt'
            }
          }
-     }
-    
+       
 }
