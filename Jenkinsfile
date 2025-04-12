@@ -54,11 +54,12 @@ pipeline {
     steps {
         script {
             sh """
-                curl -v -k --user mehdi:${JENKINS_API_TOKEN} \
-                -X POST -H 'cache-control: no-cache' \
-                -H 'content-type: application/x-www-form-urlencoded' \
-                --data 'IMAGE_TAG=${IMAGE_TAG}' \
-                'http://192.168.1.3:8080/job/app-CD/buildWithParameters?token=gitops-token'
+                curl -v -k -i --user your-jenkins-username:${JENKINS_API_TOKEN} \
+-X POST -H 'cache-control: no-cache' \
+-H 'content-type: application/x-www-form-urlencoded' \
+--data 'IMAGE_TAG=${IMAGE_TAG}' \
+'http://192.168.1.3:8080/job/app-CD/buildWithParameters?token=gitops-token'
+
             """
         }
     }
