@@ -25,7 +25,7 @@ pipeline {
                 git branch: 'main', url: 'https://github.com/mehdi2025/app.git'
             }
         }
-        stage("Sonarqube Analysis") {
+        /*stage("Sonarqube Analysis") {
             steps {
                 withSonarQubeEnv('SonarQube-Server') {
                     sh '''$SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=app \
@@ -40,16 +40,16 @@ pipeline {
                 }
             }
         }
-        /*stage('Install Dependencies') {
+        stage('Install Dependencies') {
             steps {
                 sh "npm install"
             }
-        }*/
+        }
         stage('TRIVY FS SCAN') {
             steps {
                 sh "trivy fs . > trivyfs.txt"
              }
-         }
+         }*/
 	 stage("Docker Build & Push"){
              steps{
                  script{
@@ -61,13 +61,13 @@ pipeline {
                 }
             }
         }
-        stage("TRIVY Image Scan"){
+        /*stage("TRIVY Image Scan"){
             steps{
                 sh "trivy image mehdichitta/app:latest > trivyimage.txt" 
             }
         }
     }
-      /*stage ('Cleanup Artifacts') {
+      stage ('Cleanup Artifacts') {
              steps {
                  script {
                       sh "docker rmi ${IMAGE_NAME}:${IMAGE_TAG}"
@@ -82,7 +82,7 @@ pipeline {
                 }
             }
          }
-     }*/
+     }
      post {
      always {
         emailext attachLog: true,
@@ -93,6 +93,6 @@ pipeline {
             to: 'chittamehdi@gmail.com',                              
             attachmentsPattern: 'trivyfs.txt,trivyimage.txt'
            }
-         }
+         }*/
 } 
 
