@@ -50,21 +50,20 @@ pipeline {
                  }
              }
          }
-	 stage('Trigger CD Pipeline') {
+	 stage("Trigger CD Pipeline") {
     steps {
         script {
-            def response = httpRequest(
-                acceptType: 'APPLICATION_JSON',
-                contentType: 'APPLICATION_JSON',
-                httpMode: 'POST',
-                url: 'http://192.168.1.3:8080/job/app-CD/buildWithParameters?token=gitops-token&IMAGE_TAG=' + "${IMAGE_TAG}",
-                validResponseCodes: '200:201'
-            )
-            echo "CD Pipeline triggered: ${response.status}"
+            sh """
+                curl -v -k --user mehdi:${JENKINS_API_TOKEN} \
+                -X POST -H 'cache-control: no-cache' \
+                -H 'content-type: application/x-www-form-urlencoded' \
+                --data 'IMAGE_TAG=${IMAGE_TAG}' \
+                'http://192.168.1.3:8080/job/app-CD/buildWithParameters?token=gitops-token'
+            """
         }
     }
 }
-       
+
 	
         
     }
