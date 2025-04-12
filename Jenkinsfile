@@ -66,7 +66,7 @@ pipeline {
                 sh "trivy image mehdichitta/app:latest > trivyimage.txt" 
             }
         }
-    }
+    
       stage ('Cleanup Artifacts') {
              steps {
                  script {
@@ -82,7 +82,8 @@ pipeline {
                 }
             }
          }
-     }
+       }
+     
      post {
      always {
         emailext attachLog: true,
@@ -94,5 +95,5 @@ pipeline {
             attachmentsPattern: 'trivyfs.txt,trivyimage.txt'
            }
          }*/
-} 
 
+    }
