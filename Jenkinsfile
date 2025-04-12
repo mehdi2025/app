@@ -27,17 +27,21 @@ pipeline {
         }
         
        
-	 stage("Docker Build & Push"){
-             steps{
-                 script{
-                   withDockerRegistry(credentialsId: 'dockerhub', toolName: 'docker'){   
-                      sh "docker build -t app ."
-                      sh "docker tag app mehdichitta/app:latest "
-                      sh "docker push mehdichitta/app:latest "
-                    }
-                }
+	 stage("Docker Build & Push") {
+    steps {
+        script {
+            withDockerRegistry(credentialsId: 'dockerhub', toolName: 'docker') {   
+                sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ."
+                sh "docker push ${IMAGE_NAME}:${IMAGE_TAG}"
+                
+                // Optional: still push latest for convenience
+                sh "docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${IMAGE_NAME}:latest"
+                sh "docker push ${IMAGE_NAME}:latest"
             }
         }
+    }
+}
+
        
 	
         
