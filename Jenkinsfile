@@ -57,7 +57,7 @@ pipeline {
                 acceptType: 'APPLICATION_JSON',
                 contentType: 'APPLICATION_JSON',
                 httpMode: 'POST',
-                url: 'http://your-jenkins-server/job/your-cd-pipeline/buildWithParameters?token=gitops-token&IMAGE_TAG=' + "${IMAGE_TAG}",
+                url: 'http://192.168.1.3:8080/job/app-CD/buildWithParameters?token=gitops-token&IMAGE_TAG=' + "${IMAGE_TAG}",
                 validResponseCodes: '200:201'
             )
             echo "CD Pipeline triggered: ${response.status}"
